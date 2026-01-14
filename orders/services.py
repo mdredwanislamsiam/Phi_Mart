@@ -28,7 +28,7 @@ class OrderServices:
     @staticmethod
     def cancel_order(order, user): 
         if user.is_staff: 
-            order.status = Order.CANCELED
+            order.status == Order.CANCELED
             order.save()
             return order
         if order.user != user: 
