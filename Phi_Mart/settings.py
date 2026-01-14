@@ -113,6 +113,17 @@ CORS_ALLOWED_ORIGINS = [
 # }
 
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('dbname'),
+        'USER': config('user'),
+        'PASSWORD': config('password'),
+        'HOST': config('host'),
+        'PORT': config('port'),
+    }
+}
+
 
 # Configuration
 cloudinary.config(
