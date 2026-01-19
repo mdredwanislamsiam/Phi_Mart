@@ -193,12 +193,15 @@ SIMPLE_JWT = {
 
 
 DJOSER = {
+    'EMAIL_FRONTEND_PROTOCOL': config("FRONTEND_PROTOCOL"),
+    'EMAIL_FRONTEND_DOMAIN': config("FRONTEND_DOMAIN"), 
+    'EMAIL_FRONTEND_SITE_NAME': "PhiMart", 
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_ACTIVATION_EMAIL':True,
     'SERIALIZERS': {
         'user_create':'users.serializers.UserCreateSerializer', 
-        'current_user': 'users.serializers.UserSerializer'
+        'current_user': 'users.serializers.UserSerializer', 
     },
 }
 
