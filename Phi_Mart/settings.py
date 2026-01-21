@@ -100,7 +100,7 @@ WSGI_APPLICATION = 'Phi_Mart.wsgi.app'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", 
-    "https://phi-mart-front-2bhdijqf1-md-redwan-islam-siams-projects.vercel.app"
+    "https://phi-mart-front-end.vercel.app"
 ]
 
 # Database
