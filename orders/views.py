@@ -8,11 +8,12 @@ from rest_framework.decorators import action
 from orders.services import OrderServices
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import permissions
 
 
 class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, GenericViewSet, ListModelMixin): 
     serializer_class = CartSerializer 
-    
+    permission_classes = [permissions.IsAuthenticated]
     def perform_create(self, serializer):
         serializer.save(user = self.request.user)
     
@@ -75,7 +76,7 @@ class OrderViewSet(ModelViewSet):
     
     def get_serializer_context(self):
         if getattr(self, 'swagger_fake_view', False):
-            return Cart.objects.none()
+            return {}
         return {'user_id': self.request.user.id, 'user': self.request.user}
     
     def get_permissions(self):
@@ -85,7 +86,7 @@ class OrderViewSet(ModelViewSet):
     
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):
-            return Cart.objects.none()
+            return {}
         if self.request.user.is_staff: 
             return Order.objects.prefetch_related('items__product').all()
         return Order.objects.prefetch_related('items__product').filter(user=self.request.user)
