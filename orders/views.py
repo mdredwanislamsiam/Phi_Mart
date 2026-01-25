@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, ListModelMixin
 from orders.serializer import CartSerializer, CartItemSerializer, AddCartItemSerializer, UpdateCartItemSerializer, OrderSerializer, CreateOrderSerializer, UpdateOrderSerializer, EmptySerializer
@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 from sslcommerz_lib import SSLCOMMERZ
-
+from django.conf import settings
 
 
 class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, GenericViewSet, ListModelMixin): 
@@ -102,14 +102,14 @@ def initiate_payment(request):
     order_id = request.data.get("orderId")
     num_items = request.data.get("numItems")
     
-    settings = {'store_id': 'phima6975dc6e2e54d',
+    ssl_settings = {'store_id': 'phima6975dc6e2e54d',
                 'store_pass': 'phima6975dc6e2e54d@ssl', 'issandbox': True}
-    sslcz = SSLCOMMERZ(settings)
+    sslcz = SSLCOMMERZ(ssl_settings)
     post_body = {}
     post_body['total_amount'] = amount
     post_body['currency'] = "BDT"
     post_body['tran_id'] = f"tr_{order_id}"
-    post_body['success_url'] = "http://localhost:5173/dashboard/payment/success/"
+    post_body['success_url'] = f"{settings.BACKEND_URL}/api/payment/success/"
     post_body['fail_url'] = "http://localhost:5173/dashboard/payment/fail/"
     post_body['cancel_url'] = "http://localhost:5173/dashboard/orders"
     post_body['emi_option'] = 0
@@ -132,3 +132,13 @@ def initiate_payment(request):
     if response.get("status") == 'SUCCESS' : 
         return Response({"payment_url": response.get("GatewayPageURL")})
     return Response({"error" : "Payment initiation failed"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(["POST"])
+def payment_success(request): 
+    order_id = request.data.get("tran_id").split('_')[1]
+    order = Order.objects.get(id = order_id)
+    order.status = "Ready to ship"
+    print(order)
+    return redirect(f"{settings.FRONTEND_URL}/dashboard/payment/success/")
