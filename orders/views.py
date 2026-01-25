@@ -109,7 +109,7 @@ def initiate_payment(request):
     post_body['total_amount'] = amount
     post_body['currency'] = "BDT"
     post_body['tran_id'] = f"tr_{order_id}"
-    post_body['success_url'] = f"{settings.FORNTEND_URL}/dashboard/payment/success/"
+    post_body['success_url'] = f"{settings.BACKEND_URL}/api/payment/success"
     post_body['fail_url'] = "http://localhost:5173/dashboard/payment/fail/"
     post_body['cancel_url'] = "http://localhost:5173/dashboard/orders"
     post_body['emi_option'] = 0
