@@ -22,5 +22,5 @@ carts_router.register('items', CartItemViewSet, basename='cart-items')
 urlpatterns =[
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
-    path('payment/inititate', initiate_payment, name = "initiate-payment")
+    path('payment/initiate', initiate_payment, name = "initiate-payment")
 ]+ router.urls + product_router.urls + carts_router.urls
