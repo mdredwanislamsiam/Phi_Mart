@@ -12,6 +12,7 @@ from rest_framework import permissions
 from sslcommerz_lib import SSLCOMMERZ
 from django.conf import settings
 from django.http import HttpResponseRedirect
+from rest_framework.views import APIView
 
 
 class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, GenericViewSet, ListModelMixin): 
@@ -151,3 +152,14 @@ def payment_cancel(request):
 @api_view(["POST"])
 def payment_fail(request): 
     return HttpResponseRedirect(f"{settings.FRONTEND_URL}/dashboard/orders")
+
+
+
+
+class HasOrderedProduct(APIView): 
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, product_id): 
+        user = request.user
+        has_ordered = OrderItem.objects.filter(order__user = user, product_id = product_id).exists(); 
+        return Response({"has_ordered": has_ordered})
