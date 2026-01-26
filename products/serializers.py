@@ -44,7 +44,6 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'name', 'description', 'stock', 'price', 'category', 'price_with_tax', 'images']
     price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')
-    category = serializers.StringRelatedField()
     def calculate_tax(self, product):
         return round(product.price * Decimal(1.1), 2)
 
